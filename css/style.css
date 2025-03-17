@@ -155,7 +155,7 @@ h1 {
     align-items: center;
     justify-content: center;
     padding: 15px 25px;
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 50%, #c471ed 100%);
     color: white;
     border: none;
     border-radius: 6px;
@@ -166,7 +166,7 @@ h1 {
     text-decoration: none;
     font-family: 'Montserrat', sans-serif;
     letter-spacing: 1px;
-    box-shadow: 0 5px 15px rgba(220, 39, 67, 0.4);
+    box-shadow: 0 5px 15px rgba(142, 68, 173, 0.4);
     margin-top: 15px;
 }
 
@@ -177,7 +177,7 @@ h1 {
 
 .instagram-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(220, 39, 67, 0.6);
+    box-shadow: 0 8px 20px rgba(142, 68, 173, 0.6);
 }
 
 /* Social Icons */
@@ -199,6 +199,7 @@ h1 {
     font-size: 1.2rem;
     transition: all 0.3s ease;
     text-decoration: none;
+    border: 2px solid #8e44ad;
 }
 
 .social-icon:hover {
