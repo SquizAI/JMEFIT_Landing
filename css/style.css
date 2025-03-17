@@ -150,23 +150,34 @@ h1 {
     color: rgba(255, 255, 255, 0.5);
 }
 
-.notify-btn {
+.instagram-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 15px 25px;
-    background: linear-gradient(135deg, #8e44ad, #9b59b6);
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
     color: white;
     border: none;
+    border-radius: 6px;
     font-weight: 600;
+    font-size: 16px;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-decoration: none;
     font-family: 'Montserrat', sans-serif;
     letter-spacing: 1px;
-    box-shadow: 0 5px 15px rgba(142, 68, 173, 0.4);
+    box-shadow: 0 5px 15px rgba(220, 39, 67, 0.4);
+    margin-top: 15px;
 }
 
-.notify-btn:hover {
-    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+.instagram-btn i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.instagram-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(142, 68, 173, 0.6);
+    box-shadow: 0 8px 20px rgba(220, 39, 67, 0.6);
 }
 
 /* Social Icons */
