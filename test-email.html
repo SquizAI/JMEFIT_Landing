@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmailJS Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #8e44ad;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #9b59b6;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <h1>JMEFIT EmailJS Test</h1>
+    
+    <div class="form-group">
+        <label for="test-email">Enter Email for Testing:</label>
+        <input type="email" id="test-email" placeholder="example@email.com">
+    </div>
+    
+    <div class="form-group">
+        <label for="template-select">Select Template to Test:</label>
+        <select id="template-select">
+            <option value="owner">Owner Notification (template_4rtp2tn)</option>
+            <option value="subscriber">Subscriber Confirmation (template_7wlen9g)</option>
+        </select>
+    </div>
+    
+    <button id="send-test">Send Test Email</button>
+    
+    <div id="result" class="result"></div>
+
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script>
+        // Initialize EmailJS with your public key
+        (function() {
+            emailjs.init("gxJ2kR5I83jSGJvj");
+        })();
+        
+        document.getElementById('send-test').addEventListener('click', function() {
+            const email = document.getElementById('test-email').value.trim();
+            const template = document.getElementById('template-select').value;
+            const resultDiv = document.getElementById('result');
+            
+            // Validate email
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = 'Please enter a valid email address';
+                resultDiv.style.display = 'block';
+                return;
+            }
+            
+            // Disable button and show loading state
+            this.disabled = true;
+            this.textContent = 'Sending...';
+            
+            // Set up template parameters
+            let templateId, templateParams;
+            
+            if (template === 'owner') {
+                templateId = 'template_4rtp2tn';
+                templateParams = {
+                    to_name: 'JMEFIT',
+                    from_name: 'JMEFIT Website',
+                    reply_to: email,
+                    to_email: 'info@jmefit.com',
+                    subscriber_email: email,
+                    message: `Test email from ${email} - This is a test of the owner notification template.`,
+                    time: new Date().toLocaleString()
+                };
+            } else {
+                templateId = 'template_7wlen9g';
+                templateParams = {
+                    to_email: email,
+                    from_name: 'JMEFIT',
+                    time: new Date().toLocaleString()
+                };
+            }
+            
+            // Send email
+            emailjs.send('service_kfzn5r8', templateId, templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `Email sent successfully! Status: ${response.status}`;
+                    resultDiv.style.display = 'block';
+                })
+                .catch(function(error) {
+                    console.log('FAILED...', error);
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `Failed to send email: ${error.text}`;
+                    resultDiv.style.display = 'block';
+                })
+                .finally(function() {
+                    // Reset button
+                    const button = document.getElementById('send-test');
+                    button.disabled = false;
+                    button.textContent = 'Send Test Email';
+                });
+        });
+    </script>
+</body>
+</html>
