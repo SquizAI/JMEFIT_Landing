@@ -42,11 +42,13 @@
             
             <div class="notify-container">
                 <p>Be the first to know when we launch</p>
-                <div class="email-input">
-                    <input type="email" id="subscriber-email" placeholder="Enter your email">
-                    <button class="notify-btn" id="notify-btn">NOTIFY ME</button>
-                </div>
-                <div id="notification-message" style="margin-top: 10px; display: none;"></div>
+                <form id="email-form" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" class="email-input-form">
+                    <div class="email-input">
+                        <input type="email" name="email" id="subscriber-email" placeholder="Enter your email" required>
+                        <button type="submit" class="notify-btn" id="notify-btn">NOTIFY ME</button>
+                    </div>
+                    <div id="notification-message" style="margin-top: 10px; display: none;"></div>
+                </form>
             </div>
             
             <div class="social-icons">
@@ -60,14 +62,7 @@
     <div class="gradient-overlay"></div>
     <div class="background-animation"></div>
 
-    <!-- EmailJS for email notifications -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function() {
-            // Replace with your actual EmailJS public key
-            emailjs.init('YOUR_PUBLIC_KEY');
-        })();
-    </script>
+    <!-- No external email service scripts needed with Formspree -->
     
     <script src="js/script.js"></script>
     <script src="js/particles.js"></script>

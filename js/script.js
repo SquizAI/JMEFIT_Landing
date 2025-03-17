@@ -28,83 +28,78 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 1000);
     
-    // Email notification functionality
+    // Email notification functionality with Formspree
+    const emailForm = document.getElementById('email-form');
     const notifyBtn = document.getElementById('notify-btn');
     const emailInput = document.getElementById('subscriber-email');
     const notificationMsg = document.getElementById('notification-message');
     
-    // Load previously stored emails from localStorage
+    // Load previously stored emails from localStorage (as backup)
     const storedEmails = JSON.parse(localStorage.getItem('jmefitSubscribers') || '[]');
     
-    notifyBtn.addEventListener('click', () => {
+    // Handle form submission
+    emailForm.addEventListener('submit', function(event) {
         const email = emailInput.value.trim();
-        if (isValidEmail(email)) {
-            // Show loading state
-            notifyBtn.disabled = true;
-            notifyBtn.innerText = 'SENDING...';
-            
-            // Store email in localStorage
-            if (!storedEmails.includes(email)) {
-                storedEmails.push(email);
-                localStorage.setItem('jmefitSubscribers', JSON.stringify(storedEmails));
-            }
-            
-            // Prepare to send email to site owner
-            const ownerTemplateParams = {
-                to_email: 'your-email@example.com', // Replace with your actual email
-                from_name: 'JMEFIT Website',
-                subscriber_email: email,
-                message: `New subscriber: ${email} has signed up for launch notifications.`
-            };
-            
-            // Prepare confirmation email to subscriber
-            const subscriberTemplateParams = {
-                to_email: email,
-                from_name: 'JMEFIT',
-                message: 'Thank you for signing up for our launch notification! We will let you know as soon as we go live. Stay fit!'
-            };
-            
-            // Send email to site owner
-            emailjs.send('default_service', 'owner_template', ownerTemplateParams)
-                .then(() => {
-                    // Send confirmation email to subscriber
-                    return emailjs.send('default_service', 'subscriber_template', subscriberTemplateParams);
-                })
-                .then(() => {
-                    // Show success message
-                    notificationMsg.innerText = 'Thank you! We will notify you when we launch.';
-                    notificationMsg.style.color = '#8e44ad';
-                    notificationMsg.style.display = 'block';
-                    emailInput.value = '';
-                    
-                    // Reset button
-                    notifyBtn.disabled = false;
-                    notifyBtn.innerText = 'NOTIFY ME';
-                    
-                    // Hide message after 5 seconds
-                    setTimeout(() => {
-                        notificationMsg.style.display = 'none';
-                    }, 5000);
-                })
-                .catch((error) => {
-                    console.error('Email sending failed:', error);
-                    
-                    // Show fallback success message (we still stored the email locally)
-                    notificationMsg.innerText = 'Thank you! Your email has been saved.';
-                    notificationMsg.style.color = '#8e44ad';
-                    notificationMsg.style.display = 'block';
-                    emailInput.value = '';
-                    
-                    // Reset button
-                    notifyBtn.disabled = false;
-                    notifyBtn.innerText = 'NOTIFY ME';
-                });
-        } else {
-            // Show error message for invalid email
-            notificationMsg.innerText = 'Please enter a valid email address.';
-            notificationMsg.style.color = '#e74c3c';
-            notificationMsg.style.display = 'block';
+        
+        // Store in localStorage as backup
+        if (isValidEmail(email) && !storedEmails.includes(email)) {
+            storedEmails.push(email);
+            localStorage.setItem('jmefitSubscribers', JSON.stringify(storedEmails));
         }
+        
+        // Show loading state
+        notifyBtn.disabled = true;
+        notifyBtn.innerText = 'SENDING...';
+        
+        // Let Formspree handle the form submission by default
+        // But we'll add custom handling for success/error messages
+        
+        // This code allows the form to submit to Formspree
+        fetch(emailForm.action, {
+            method: emailForm.method,
+            body: new FormData(emailForm),
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            // Show success message
+            notificationMsg.innerText = 'Thank you! We will notify you when we launch.';
+            notificationMsg.style.color = '#8e44ad';
+            notificationMsg.style.display = 'block';
+            emailInput.value = '';
+            
+            // Reset button
+            notifyBtn.disabled = false;
+            notifyBtn.innerText = 'NOTIFY ME';
+            
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                notificationMsg.style.display = 'none';
+            }, 5000);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            
+            // Show fallback message (we still stored the email locally)
+            notificationMsg.innerText = 'Thank you! Your email has been saved locally.';
+            notificationMsg.style.color = '#8e44ad';
+            notificationMsg.style.display = 'block';
+            emailInput.value = '';
+            
+            // Reset button
+            notifyBtn.disabled = false;
+            notifyBtn.innerText = 'NOTIFY ME';
+        });
+        
+        // Prevent the form from submitting normally
+        event.preventDefault();
     });
     
     // Email validation function
