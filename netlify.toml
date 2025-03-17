@@ -1,6 +1,6 @@
 [build]
-  publish = "."
-  command = "" # No build command needed for this static site
+  publish = "." # Publish the root directory
+  command = "echo 'No build command needed for this static site'"
 
 # Redirects and headers
 [[redirects]]
