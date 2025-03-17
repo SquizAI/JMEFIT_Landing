@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 1000);
     
-    // Email notification functionality with EmailJS
+    // Email notification functionality with Formspree
     const notifyBtn = document.getElementById('notify-btn');
     const emailInput = document.getElementById('subscriber-email');
     const notificationMsg = document.getElementById('notification-message');
@@ -49,33 +49,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('jmefitSubscribers', JSON.stringify(storedEmails));
             }
             
-            // Prepare email parameters for owner notification
-            const ownerTemplateParams = {
-                to_name: 'JMEFIT',
-                from_name: 'JMEFIT Website',
-                reply_to: email,
-                to_email: 'info@jmefit.com',
-                subscriber_email: email,
-                message: `New subscriber: ${email} has signed up for launch notifications.`,
-                time: new Date().toLocaleString()
-            };
-            
-            // Prepare email parameters for subscriber confirmation
-            const subscriberTemplateParams = {
-                to_email: email,
-                from_name: 'JMEFIT',
-                time: new Date().toLocaleString()
-            };
-            
-            // Send email to owner using EmailJS
-            emailjs.send('service_kfzn5r8', 'template_4rtp2tn', ownerTemplateParams)
-                .then(() => {
-                    // After successfully sending to owner, send confirmation to subscriber
-                    return emailjs.send('service_kfzn5r8', 'template_7wlen9g', subscriberTemplateParams);
+            // Send to Formspree
+            fetch('https://formspree.io/f/mbjqvkey', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    message: `🚀 New JMEFIT subscriber! 💪 Email: ${email}`,
+                    timestamp: new Date().toLocaleString() 
                 })
-                .then(() => {
+            })
+            .then(response => {
+                if (response.ok) {
                     // Show success message
-                    notificationMsg.innerText = 'Thank you! We will notify you when we launch.';
+                    notificationMsg.innerText = 'Thank you! We will notify you when we launch. 🔥';
                     notificationMsg.style.color = '#8e44ad';
                     notificationMsg.style.display = 'block';
                     emailInput.value = '';
@@ -89,21 +78,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         notificationMsg.style.display = 'none';
                     }, 5000);
                     
-                    console.log('Email sent successfully!');
-                })
-                .catch((error) => {
-                    console.error('Email sending failed:', error);
-                    
-                    // Show fallback success message (we still stored the email locally)
-                    notificationMsg.innerText = 'Thank you! Your email has been saved locally.';
-                    notificationMsg.style.color = '#8e44ad';
-                    notificationMsg.style.display = 'block';
-                    emailInput.value = '';
-                    
-                    // Reset button
-                    notifyBtn.disabled = false;
-                    notifyBtn.innerText = 'NOTIFY ME';
-                });
+                    console.log('Email sent successfully! 📧');
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            })
+            .catch((error) => {
+                console.error('Email sending failed:', error);
+                
+                // Show fallback success message (we still stored the email locally)
+                notificationMsg.innerText = 'Thank you! Your email has been saved locally. 📝';
+                notificationMsg.style.color = '#8e44ad';
+                notificationMsg.style.display = 'block';
+                emailInput.value = '';
+                
+                // Reset button
+                notifyBtn.disabled = false;
+                notifyBtn.innerText = 'NOTIFY ME';
+            });
         } else {
             // Show error message for invalid email
             notificationMsg.innerText = 'Please enter a valid email address.';
