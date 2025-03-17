@@ -1,5 +1,5 @@
 [build]
-  publish = "/"
+  publish = "."
   command = "" # No build command needed for this static site
 
 # Redirects and headers
@@ -7,3 +7,9 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Headers for security and caching
+[[headers]]
+  for = "/*"
+    [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
