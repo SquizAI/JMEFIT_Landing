@@ -65,16 +65,18 @@ body, html {
 
 /* Headline Styles */
 h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 20px;
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 25px;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    background: linear-gradient(90deg, #8e44ad, #9b59b6);
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, #8e44ad, #c471ed, #ff48a5, #c471ed, #8e44ad);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    text-shadow: 0 5px 15px rgba(142, 68, 173, 0.4);
+    text-shadow: 0 8px 20px rgba(142, 68, 173, 0.6);
+    animation: textShine 5s linear infinite;
 }
 
 .tagline {
@@ -155,7 +157,7 @@ h1 {
     align-items: center;
     justify-content: center;
     padding: 15px 25px;
-    background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 50%, #c471ed 100%);
+    background: linear-gradient(135deg, #8e44ad 0%, #c471ed 50%, #ff48a5 100%);
     color: white;
     border: none;
     border-radius: 6px;
@@ -275,6 +277,11 @@ h1 {
     100% {
         background-position: 100% 100%;
     }
+}
+
+@keyframes textShine {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
 }
 
 /* Responsive Styles */
