@@ -1,0 +1,9 @@
+[build]
+  publish = "/"
+  command = "" # No build command needed for this static site
+
+# Redirects and headers
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
