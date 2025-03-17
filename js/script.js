@@ -28,7 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 1000);
     
-    // Email notification functionality with Formspree
+    // Initialize EmailJS
+    emailjs.init('hZQn3UL-jdiWKZRQk'); // Replace with your EmailJS public key
+
+    // Email notification functionality
     const notifyBtn = document.getElementById('notify-btn');
     const emailInput = document.getElementById('subscriber-email');
     const notificationMsg = document.getElementById('notification-message');
@@ -49,20 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('jmefitSubscribers', JSON.stringify(storedEmails));
             }
             
-            // Send to Formspree
-            fetch('https://formspree.io/f/mbjqvkey', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email,
-                    message: `🚀 New JMEFIT subscriber! 💪 Email: ${email}`,
-                    timestamp: new Date().toLocaleString() 
-                })
+            // Send email using EmailJS
+            emailjs.send('service_2vbzl9p', 'template_qd86o2p', {
+                email: email,
+                message: `🚀 New JMEFIT subscriber! 💪 Email: ${email}`,
+                timestamp: new Date().toLocaleString()
             })
             .then(response => {
-                if (response.ok) {
+                if (response.status === 200) {
                     // Show success message
                     notificationMsg.innerText = 'Thank you! We will notify you when we launch. 🔥';
                     notificationMsg.style.color = '#8e44ad';
@@ -80,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     console.log('Email sent successfully! 📧');
                 } else {
-                    throw new Error('Form submission failed');
+                    throw new Error('Email sending failed');
                 }
             })
             .catch((error) => {
