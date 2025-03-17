@@ -49,18 +49,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('jmefitSubscribers', JSON.stringify(storedEmails));
             }
             
-            // Prepare email parameters for EmailJS
-            const templateParams = {
+            // Prepare email parameters for owner notification
+            const ownerTemplateParams = {
                 to_name: 'JMEFIT',
                 from_name: 'JMEFIT Website',
                 reply_to: email,
-                to_email: 'jaimemt24@gmail.com', // Replace with your actual email
+                to_email: 'info@jmefit.com',
                 subscriber_email: email,
-                message: `New subscriber: ${email} has signed up for launch notifications.`
+                message: `New subscriber: ${email} has signed up for launch notifications.`,
+                time: new Date().toLocaleString()
             };
             
-            // Send email using EmailJS
-            emailjs.send('service_id', 'template_id', templateParams) // Replace with your service and template IDs
+            // Prepare email parameters for subscriber confirmation
+            const subscriberTemplateParams = {
+                to_email: email,
+                from_name: 'JMEFIT',
+                time: new Date().toLocaleString()
+            };
+            
+            // Send email to owner using EmailJS
+            emailjs.send('service_kfzn5r8', 'template_4rtp2tn', ownerTemplateParams)
+                .then(() => {
+                    // After successfully sending to owner, send confirmation to subscriber
+                    return emailjs.send('service_kfzn5r8', 'template_7wlen9g', subscriberTemplateParams);
+                })
                 .then(() => {
                     // Show success message
                     notificationMsg.innerText = 'Thank you! We will notify you when we launch.';
